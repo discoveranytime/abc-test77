@@ -375,6 +375,7 @@ details.deep p{margin:10px 0 4px; color:var(--ink);}
   <p class="mp-err" id="mp-err" hidden></p>
   <audio id="mp-audio" preload="metadata" src="suika.mp3"></audio>
 </div>
+<audio id="mp-click" preload="auto" src="click.mp3"></audio>
 
 <script>
 const PASTELS=['#FFE3EC','#FFEFD6','#FFF6D6','#E4F7DC','#DDF3FF','#E7E2FF','#FBE4F5'];
@@ -814,8 +815,13 @@ function go(n){
   window.scrollTo({top:0,behavior:'smooth'});
   try{history.replaceState(null,'','#'+pages[cur].dataset.page);}catch(e){}
 }
-document.getElementById('prevbtn').onclick=()=>go(cur-1);
-document.getElementById('nextbtn').onclick=()=>go(cur+1);
+/* page-turn click sound for the navbar arrow buttons */
+const clickSfx=document.getElementById('mp-click');
+if(clickSfx)clickSfx.volume=0.4;
+function pageClick(){if(!clickSfx)return;
+  try{clickSfx.currentTime=0;const pr=clickSfx.play();if(pr&&pr.catch)pr.catch(()=>{});}catch(e){}}
+document.getElementById('prevbtn').onclick=()=>{pageClick();go(cur-1);};
+document.getElementById('nextbtn').onclick=()=>{pageClick();go(cur+1);};
 document.getElementById('openbook').onclick=()=>go(1);
 document.getElementById('backtostart').onclick=()=>go(0);
 document.getElementById('tocbtn').onclick=()=>{strip.scrollIntoView({behavior:'smooth',block:'nearest'}); strip.focus&&strip.focus();};
